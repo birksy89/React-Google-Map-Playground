@@ -24,7 +24,7 @@ class List extends Component {
         return (
 
 
-            <div key={data.Title} className="card mb-3">
+            <div key={data.Title} className="card mb-3" style={{position:'relative'}}>
                 <div className="row">
                     <div className="col-lg-5 col-xl-4">
                         <a style={cardStyle} href={this.linkHelper(data.LinkURL)} >

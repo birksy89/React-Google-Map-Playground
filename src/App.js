@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 //Mine
 import List from './components/List'
+import Map from './components/Map'
 
 class App extends Component {
 
@@ -37,7 +38,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-
+      <Map destinations={this.state.destinations}/>
         <List destinations={this.state.destinations}/>
       </div>
     );
