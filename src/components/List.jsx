@@ -2,33 +2,31 @@ import React, { Component } from 'react';
 
 class List extends Component {
 
+
     linkHelper(linkData) {
         var tabID = linkData.split(':').pop();
         var dnnLink = `/default.aspx?tabid=${tabID}`;
         return dnnLink
     }
 
+    handleClick(marker){
+
+        //console.log(marker)
+        this.props.filterDestinations(marker);
+    }
+
     renderHTML(data) {
 
-        var cardStyle = {
-            backgroundImage: `url('${data.Image}')`,
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: '100%',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-        };
+
 
         return (
 
 
-            <div key={data.Title} className="card mb-3" style={{position:'relative'}}>
+            <div key={data.Title} className="card mb-3" style={{position:'relative'}} onClick={()=>this.handleClick(data)}>
                 <div className="row">
                     <div className="col-lg-5 col-xl-4">
-                        <a style={cardStyle} href={this.linkHelper(data.LinkURL)} >
-
+                        <a  href={this.linkHelper(data.LinkURL)} >
+    <img className="img-fluid" src={data.Image} alt=""/>
                         </a>
                     </div>
                     <div className=" col-lg-7 col-xl-8">
@@ -49,8 +47,11 @@ class List extends Component {
     }
 
     render() {
+
+
+        console.log(this.props)
         return (
-            <div className="row">
+            <div className="">
                 {this.props.destinations.map(destination => this.renderHTML(destination))}
             </div>
         );
