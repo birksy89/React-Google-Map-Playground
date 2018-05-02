@@ -2,6 +2,7 @@ import React from "react"
 import { compose, withProps, lifecycle } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
+
 const MapWithAMarkers = compose(
     withProps({
         googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCxQtmQVRBREa1e-FbfiRXf6vi9pDwWf7o&v=3.exp&libraries=geometry,drawing,places",
@@ -15,7 +16,9 @@ const MapWithAMarkers = compose(
 
             this.setState({
 
-                zoomToMarkers: map => {
+                zoomToMarkers: (map) => {
+
+                    this.map = map;
 
                     const bounds = new window.google.maps.LatLngBounds();
                     map.props.children.forEach((child) => {
@@ -24,13 +27,23 @@ const MapWithAMarkers = compose(
                         }
                     })
                     map.fitBounds(bounds);
+                },
+                myStateFunc: () => {
+                    console.log("MyStateFunc Fired", this)
                 }
             })
         },
 
-        componentDidUpdate(){
-            console.log("Map Updated" , this)
-            // const bounds = new window.google.maps.LatLngBounds();
+        componentDidUpdate() {
+
+            //Seems to be a race-condition where Google Map library isn't always loaded
+            if (window.google) {
+                console.log("got Google")
+                const bounds = new window.google.maps.LatLngBounds();
+                //Run the "zoomtoMarkers" with new pins
+                this.state.zoomToMarkers(this.map)
+            }
+
         }
 
     }),
@@ -40,12 +53,12 @@ const MapWithAMarkers = compose(
 
 
 )(props =>
-    <GoogleMap ref={props.zoomToMarkers} defaultZoom={5} defaultCenter={{ lat: 0.0, lng: 0.0 }} onIdle={console.log("Idle")} >
+    <GoogleMap ref={props.zoomToMarkers} defaultZoom={5} defaultCenter={{ lat: 0.0, lng: 0.0 }} onIdle={props.myStateFunc} >
         {props.markers.map(marker => (
             <Marker
                 key={marker.Id}
                 position={{ lat: parseFloat(marker.Latitude), lng: parseFloat(marker.Longitude) }}
-                onClick={()=>props.filterDestinations(marker)}
+                onClick={() => props.filterDestinations(marker)}
             />
         ))}
     </GoogleMap>
