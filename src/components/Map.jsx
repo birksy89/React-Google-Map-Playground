@@ -40,7 +40,7 @@ const MapWithAMarkers = compose(
 
 
 )(props =>
-    <GoogleMap ref={props.zoomToMarkers} defaultZoom={5} defaultCenter={{ lat: 0.0, lng: 0.0 }} onIdle={this.fitBounds} >
+    <GoogleMap ref={props.zoomToMarkers} defaultZoom={5} defaultCenter={{ lat: 0.0, lng: 0.0 }} onIdle={console.log("Idle")} >
         {props.markers.map(marker => (
             <Marker
                 key={marker.Id}
