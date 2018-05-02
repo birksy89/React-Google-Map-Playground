@@ -47,9 +47,6 @@ class List extends Component {
     }
 
     render() {
-
-
-        console.log(this.props)
         return (
             <div className="">
                 {this.props.destinations.map(destination => this.renderHTML(destination))}

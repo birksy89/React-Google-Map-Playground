@@ -2,8 +2,6 @@ import React from "react"
 import { compose, withProps, lifecycle } from "recompose"
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
-
-
 const MapWithAMarkers = compose(
     withProps({
         googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCxQtmQVRBREa1e-FbfiRXf6vi9pDwWf7o&v=3.exp&libraries=geometry,drawing,places",
@@ -18,7 +16,7 @@ const MapWithAMarkers = compose(
             this.setState({
 
                 zoomToMarkers: map => {
-                    console.log("Zoom to markers");
+
                     const bounds = new window.google.maps.LatLngBounds();
                     map.props.children.forEach((child) => {
                         if (child.type === Marker) {
@@ -26,11 +24,14 @@ const MapWithAMarkers = compose(
                         }
                     })
                     map.fitBounds(bounds);
-                },
-                activeMarker:null
+                }
             })
         },
 
+        componentDidUpdate(){
+            console.log("Map Updated" , this)
+            // const bounds = new window.google.maps.LatLngBounds();
+        }
 
     }),
     withScriptjs,
@@ -39,7 +40,7 @@ const MapWithAMarkers = compose(
 
 
 )(props =>
-    <GoogleMap ref={props.zoomToMarkers} defaultZoom={5} defaultCenter={{ lat: 0.0, lng: 0.0 }} >
+    <GoogleMap ref={props.zoomToMarkers} defaultZoom={5} defaultCenter={{ lat: 0.0, lng: 0.0 }} onIdle={this.fitBounds} >
         {props.markers.map(marker => (
             <Marker
                 key={marker.Id}

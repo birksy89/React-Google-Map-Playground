@@ -1,60 +1,71 @@
 import React, { Component } from 'react';
-
 //3rd Party
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container } from 'reactstrap';
 //Mine
 import List from './components/List'
 import Map from './components/Map'
+import StyledComponent from './components/StyledComponent'
+import DataSwitcher from "./components/DataSwitcher";
+
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      error: null,
-      isLoaded: false,
-      allDestinations: [],
+      continent: 'Europe',
       destinations: []
     };
 
 
   }
 
-
   componentDidMount() {
-    console.log("Mounted")
-    var pathArray = window.location.pathname.split('/');
-    var lastPath = pathArray.pop() || "Europe";
-    //Check what path we're using
-    console.log(lastPath);
+    var continent = this.state.continent;
+    this.getDestinations(continent)
+  }
 
-    //Go Get some data
-    axios.get('http://dnndev.me/api/2sxc/app/Rondo-Trip/query/Filter by Continent?Continent=Europe')
-      .then(res => {
-        const destinations = res.data.Default;
-        this.setState({
-          destinations: destinations,
-          allDestinations: destinations
+  getDestinations(continent) {
+
+
+    if (continent === 'All') {
+      //Go Get some data
+      axios.get(`http://dnndev.me/api/2sxc/app/Rondo-Trip/content/Trip-Content`)
+        .then(res => {
+          const destinations = res.data;
+          this.setState({
+
+            destinations: destinations
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
         });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    }
+    else {
+      //Go Get some data
+      axios.get(`http://dnndev.me/api/2sxc/app/Rondo-Trip/query/Filter by Continent?Continent=${continent}`)
+        .then(res => {
+          const destinations = res.data.Default;
+          this.setState({
+
+            destinations: destinations
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+
   }
 
-  resetDestinations() {
-    console.log("Resetting...")
-
-    var all = this.state.allDestinations;
-
-    this.setState({
-      destinations: all
-    })
-  }
 
   filterDestinations(marker) {
-    console.log("Hit App Component!");
-    console.log(marker);
+    //console.log("Hit App Component!");
+    //console.log(marker);
     //This takes an array and filters based on a property - ie country
     var currentDestinations = this.state.destinations;
     //console.log(currentDestinations);
@@ -71,9 +82,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Map destinations={this.state.destinations} filterDestinations={this.filterDestinations.bind(this)} />
-        <button onClick={this.resetDestinations.bind(this)}>Reset</button>
-        <List destinations={this.state.destinations} filterDestinations={this.filterDestinations.bind(this)} />
+        <Container>
+          <StyledComponent />
+          <Map destinations={this.state.destinations} filterDestinations={this.filterDestinations.bind(this)} />
+          <DataSwitcher getDestinations={this.getDestinations.bind(this)} activeContinent={this.state.continent} />
+          <List destinations={this.state.destinations} filterDestinations={this.filterDestinations.bind(this)} />
+        </Container>
       </div>
     );
   }
