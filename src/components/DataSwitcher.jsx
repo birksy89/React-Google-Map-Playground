@@ -5,14 +5,11 @@ class DataSwitcher extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = { rSelected: this.props.activeContinent };
         this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
     }
 
     onRadioBtnClick(rSelected) {
-        this.props.getDestinations(rSelected);
-        this.setState({ rSelected });
+        this.props.filterDestinationsByContinent(rSelected);
     }
 
 
@@ -20,10 +17,10 @@ class DataSwitcher extends Component {
         return (
             <div>
                 <ButtonGroup>
-                    <Button color="primary" onClick={() => this.onRadioBtnClick("All")} active={this.state.rSelected === "All"}>All</Button>
-                    <Button color="primary" onClick={() => this.onRadioBtnClick("Asia")} active={this.state.rSelected === "Asia"}>Asia</Button>
-                    <Button color="primary" onClick={() => this.onRadioBtnClick("Europe")} active={this.state.rSelected === "Europe"}>Europe</Button>
-                    <Button color="primary" onClick={() => this.onRadioBtnClick("North America")} active={this.state.rSelected === "North America"}>North America</Button>
+                    <Button color="primary" onClick={() => this.onRadioBtnClick("All")} active={this.props.activeContinent === "All"}>All</Button>
+                    <Button color="primary" onClick={() => this.onRadioBtnClick("Asia")} active={this.props.activeContinent === "Asia"}>Asia</Button>
+                    <Button color="primary" onClick={() => this.onRadioBtnClick("Europe")} active={this.props.activeContinent === "Europe"}>Europe</Button>
+                    <Button color="primary" onClick={() => this.onRadioBtnClick("North America")} active={this.props.activeContinent === "North America"}>North America</Button>
                 </ButtonGroup>
             </div>
         );

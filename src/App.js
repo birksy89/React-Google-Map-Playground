@@ -29,41 +29,52 @@ class App extends Component {
 
   getDestinations(continent) {
 
-
-    if (continent === 'All') {
-      //Go Get some data
-      axios.get(`http://dnndev.me/api/2sxc/app/Rondo-Trip/content/Trip-Content`)
-        .then(res => {
-          const destinations = res.data;
-          this.setState({
-
-            destinations: destinations
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
+    //Go Get all the data
+    axios.get(`http://dnndev.me/api/2sxc/app/Rondo-Trip/content/Trip-Content`)
+      .then(res => {
+        const destinations = res.data;
+        this.setState({
+          destinationsAll: destinations,
+          destinations: destinations
         });
-    }
-    else {
-      //Go Get some data
-      axios.get(`http://dnndev.me/api/2sxc/app/Rondo-Trip/query/Filter by Continent?Continent=${continent}`)
-        .then(res => {
-          const destinations = res.data.Default;
-          this.setState({
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
-            destinations: destinations
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
+    // if (continent === 'All') {
+    //   //Go Get some data
+    //   axios.get(`http://dnndev.me/api/2sxc/app/Rondo-Trip/content/Trip-Content`)
+    //     .then(res => {
+    //       const destinations = res.data;
+    //       this.setState({
+    //         destinations: destinations
+    //       });
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
+    // }
+    // else {
+    //   //Go Get some data
+    //   axios.get(`http://dnndev.me/api/2sxc/app/Rondo-Trip/query/Filter by Continent?Continent=${continent}`)
+    //     .then(res => {
+    //       const destinations = res.data.Default;
+    //       this.setState({
+
+    //         destinations: destinations
+    //       });
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
+    // }
 
 
   }
 
 
-  filterDestinations(marker) {
+  filterDestinationsByCountryFromMarker(marker) {
     //console.log("Hit App Component!");
     //console.log(marker);
     //This takes an array and filters based on a property - ie country
@@ -79,14 +90,38 @@ class App extends Component {
 
   }
 
+  filterDestinationsByContinent(continent) {
+
+    //This takes an array and filters based on a property - ie country
+    var allDestinations = this.state.destinationsAll;
+    console.log(allDestinations);
+
+    var filteredDestinations = null;
+
+    if (continent != 'All') {
+      filteredDestinations = allDestinations.filter(destination => destination.Continent === continent);
+    }
+    else {
+      filteredDestinations = allDestinations
+    }
+
+    console.log(filteredDestinations);
+
+    this.setState({
+      continent: continent,
+      destinations: filteredDestinations
+    })
+
+  }
+
   render() {
     return (
       <div className="App">
         <Container>
           <StyledComponent />
-          <Map destinations={this.state.destinations} filterDestinations={this.filterDestinations.bind(this)} />
-          <DataSwitcher getDestinations={this.getDestinations.bind(this)} activeContinent={this.state.continent} />
-          <List destinations={this.state.destinations} filterDestinations={this.filterDestinations.bind(this)} />
+          <Map destinations={this.state.destinations} filterDestinations={this.filterDestinationsByCountryFromMarker.bind(this)} />
+          <DataSwitcher filterDestinationsByContinent={this.filterDestinationsByContinent.bind(this)} activeContinent={this.state.continent} />
+          <List destinations={this.state.destinations} filterDestinations={this.filterDestinationsByCountryFromMarker.bind(this)} />
         </Container>
       </div>
     );
