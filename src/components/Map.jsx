@@ -29,7 +29,7 @@ const MapWithAMarkers = compose(
                     map.fitBounds(bounds);
                 },
                 myStateFunc: () => {
-                    console.log("MyStateFunc Fired", this)
+                    //console.log("MyStateFunc Fired", this)
                 }
             })
         },
@@ -38,8 +38,6 @@ const MapWithAMarkers = compose(
 
             //Seems to be a race-condition where Google Map library isn't always loaded
             if (window.google) {
-                console.log("got Google")
-                const bounds = new window.google.maps.LatLngBounds();
                 //Run the "zoomtoMarkers" with new pins
                 this.state.zoomToMarkers(this.map)
             }

@@ -8,6 +8,8 @@ import List from './components/List'
 import Map from './components/Map'
 import StyledComponent from './components/StyledComponent'
 import DataSwitcher from "./components/DataSwitcher";
+//Data
+import Fallback from "./data/fallback";
 
 
 class App extends Component {
@@ -29,18 +31,28 @@ class App extends Component {
 
   getDestinations(continent) {
 
+    let destinations = null;
+
     //Go Get all the data
-    axios.get(`http://dnndev.me/api/2sxc/app/Rondo-Trip/content/Trip-Content`)
+    axios.get(`http://xxx.me/api/2sxc/app/Rondo-Trip/content/Trip-Content`)
       .then(res => {
-        const destinations = res.data;
+       destinations = res.data;
         this.setState({
           destinationsAll: destinations,
           destinations: destinations
         });
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch(error => {
+
+        console.info("Using Local Data", error)
+        this.setState({
+          destinationsAll: Fallback,
+          destinations: Fallback
+        })
+
       });
+
+
 
     // if (continent === 'All') {
     //   //Go Get some data
@@ -94,18 +106,18 @@ class App extends Component {
 
     //This takes an array and filters based on a property - ie country
     var allDestinations = this.state.destinationsAll;
-    console.log(allDestinations);
+    //console.log(allDestinations);
 
     var filteredDestinations = null;
 
-    if (continent != 'All') {
+    if (continent !== 'All') {
       filteredDestinations = allDestinations.filter(destination => destination.Continent === continent);
     }
     else {
       filteredDestinations = allDestinations
     }
 
-    console.log(filteredDestinations);
+    //console.log(filteredDestinations);
 
     this.setState({
       continent: continent,
